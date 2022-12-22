@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <audio autoplay="autoplay" src="music.flac" id="song" onended="change()"></audio> 
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+    <script src='https://labs.nearpod.com/bodymovin/demo/navidad/bodymovin.js'></script>
+    <script src='https://labs.nearpod.com/bodymovin/demo/navidad/data.js'></script>
+    <style>
+        body {
+            height: 100vh;
+            background-color: black;
+        }
+
+        .text {
+            position: absolute;
+            z-index: 9999999;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        @keyframes remove {
+            100% {
+                opacity: 0;
+            }
+        }
+
+        #svgContainer {
+            width: 80%;
+            height: 80%;
+            background-color: #000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+    </style>
+    <div id="svgContainer"></div>
+</head>
+
+<body>
+
+</body>
+<script>
+    window.addEventListener('load', function () {
+        var index = 1;
+        let body = document.body;
+        let content = ["❤维奥奥~❤", "❤Vaoao❤", "❤Hahahaha❤", "❤圣诞快乐捏~❤", "❤叮叮当❤", "❤叮叮当❤", "❤铃儿响叮当❤",
+        "❤我们滑雪多快乐❤",  "❤我们坐在雪橇上❤", "❤把歌听完吧~❤"
+        ] //自定义内容的数组
+        body.addEventListener('click', function (e) {
+            let x = e.pageX;
+            let y = e.pageY; //当前坐标
+            // let randContent = Math.ceil(Math.random() * content.length);
+            // let randContent = Math.ceil(index);
+            
+            let text = new Text(x, y, index);
+            index = index + 1;
+            if(index == content.length) {
+                index = 1;
+            }
+            let span = document.createElement('span')
+            span.style.color = text.getRandom();
+            text.create(span);
+            setTimeout(function () {
+                text.out(span)
+            }, 1900)
+        })
+
+        function Text(x, y, rand) {
+            this.x = x;
+            this.y = y;
+            this.rand = rand;
+        }
+        Text.prototype.create = function (_this) {
+            let body = document.body;
+            _this.innerHTML = content[this.rand - 1];
+            _this.className = 'text'
+            _this.style.top = this.y - 20 + 'px'
+            _this.style.left = this.x - 50 + 'px'
+            _this.style.animation = 'remove 2s'
+            body.appendChild(_this);
+            let i = 0
+            setInterval(() => {
+                _this.style.top = this.y - 20 - i + 'px'
+                i++
+            }, 10);
+        }
+        Text.prototype.out = function (_this) {
+            _this.remove()
+        }
+        //设置随机颜色
+        Text.prototype.getRandom = function () {
+            let allType = '0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f'; //16进制颜色
+            let allTypeArr = allType.split(','); //通过','分割为数组
+            let color = '#';
+            for (var i = 0; i < 6; i++) {
+                //随机生成一个0-16的数
+                var random = parseInt(Math.random() * allTypeArr.length);
+                color += allTypeArr[random];
+            }
+            return color; //返回随机生成的颜色
+        }
+        
+    })
+
+    var svgContainer = document.getElementById('svgContainer');
+        var animItem = bodymovin.loadAnimation({
+        wrapper: svgContainer,
+        animType: 'svg',
+        loop: true,
+        animationData: JSON.parse(animationData)
+        });
+</script>
+</html>
